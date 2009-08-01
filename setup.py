@@ -15,5 +15,8 @@ setup(
             libraries=["tokyocabinet"]
         )
     ],
-    description = """Python wrapper for the inestimably rad Tokyo Cabinet"""
+    description = """Another python wrapper for Tokyo Cabinet""",
+    author = "Elisha Cook",
+    author_email = "ecook@justastudio.com",
+    url = "http://bitbucket.org/elisha/tokyocabinet/"
 )
