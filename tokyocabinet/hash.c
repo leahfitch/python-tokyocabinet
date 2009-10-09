@@ -691,7 +691,7 @@ Hash_fsiz(Hash *self)
 }
 
 
-static Py_ssize_t
+static int
 Hash_length(Hash *self)
 {
     uint64_t rnum;
@@ -700,7 +700,7 @@ Hash_length(Hash *self)
     rnum = tchdbrnum(self->db);
     Py_END_ALLOW_THREADS
     
-    return (Py_ssize_t) rnum;
+    return (int) rnum;
 }
 
 
@@ -708,7 +708,7 @@ static PyObject *
 Hash_subscript(Hash *self, PyObject *key)
 {
     char *kbuf, *vbuf;
-    Py_ssize_t ksiz;
+    int ksiz;
     int vsiz;
     PyObject *value;
     
@@ -752,7 +752,7 @@ Hash_ass_subscript(Hash *self, PyObject *key, PyObject *value)
 {
     bool success;
     char *kbuf, *vbuf;
-    Py_ssize_t ksiz, vsiz;
+    int ksiz, vsiz;
     
     if (!PyString_Check(key))
     {
@@ -804,7 +804,7 @@ static int
 Hash_contains(Hash *self, PyObject *value)
 {
     char *kbuf;
-    Py_ssize_t ksiz;
+    int ksiz;
     int vsiz;
     
     if (!PyString_Check(value))

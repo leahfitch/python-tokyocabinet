@@ -301,6 +301,19 @@ TableQuery_searchout(TableQuery *self)
 
 
 static PyObject *
+TableQuery_hint(TableQuery *self)
+{
+    const char *hint;
+    
+    Py_BEGIN_ALLOW_THREADS
+    hint = tctdbqryhint(self->q);
+    Py_END_ALLOW_THREADS
+    
+    return PyString_FromString(hint);
+}
+
+
+static PyObject *
 TableQuery_count(TableQuery *self)
 {
     TCLIST *results;
@@ -352,6 +365,12 @@ static PyMethodDef TableQuery_methods[] =
         "searchout", (PyCFunction) TableQuery_searchout,
         METH_NOARGS,
         "Remove all matching records."
+    },
+    
+    {
+        "hint", (PyCFunction) TableQuery_hint,
+        METH_NOARGS,
+        "Get the hint for a query."
     },
     
     {
@@ -1212,6 +1231,8 @@ Table_metasearch(Table *self, PyObject *args)
     results = tctdbmetasearch(queries, n, type);
     Py_END_ALLOW_THREADS
     
+    free(queries);
+    
     if (!results)
     {
         PyErr_SetString(PyExc_MemoryError, "Cannot allocate memory for TCLIST object");
@@ -1238,7 +1259,7 @@ Table_metasearch(Table *self, PyObject *args)
 }
 
 
-static Py_ssize_t
+static int
 Table_length(Table *self)
 {
     uint64_t rnum;
@@ -1247,7 +1268,7 @@ Table_length(Table *self)
     rnum = tctdbrnum(self->db);
     Py_END_ALLOW_THREADS
     
-    return (Py_ssize_t) rnum;
+    return (int) rnum;
 }
 
 
@@ -1337,7 +1358,7 @@ static int
 Table_contains(Table *self, PyObject *value)
 {
     char *kbuf;
-    Py_ssize_t ksiz;
+    int ksiz;
     int vsiz;
     
     if (!PyString_Check(value))
