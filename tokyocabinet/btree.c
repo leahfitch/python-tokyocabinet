@@ -1502,7 +1502,11 @@ BTree_ass_subscript(BTree *self, PyObject *key, PyObject *value)
 
 static PyMappingMethods BTree_as_mapping = 
 {
+#if PY_VERSION_HEX < 0x02050000
+    (inquiry) BTree_length,
+#else
     (lenfunc) BTree_length,
+#endif
     (binaryfunc) BTree_subscript,
     (objobjargproc) BTree_ass_subscript
 };

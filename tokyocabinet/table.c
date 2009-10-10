@@ -1348,7 +1348,11 @@ Table_ass_subscript(Table *self, PyObject *key, PyObject *value)
 
 static PyMappingMethods Table_as_mapping = 
 {
+#if PY_VERSION_HEX < 0x02050000
+    (inquiry) Table_length,
+#else
     (lenfunc) Table_length,
+#endif
     (binaryfunc) Table_subscript,
     (objobjargproc) Table_ass_subscript
 };

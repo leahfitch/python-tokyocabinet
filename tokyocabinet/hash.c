@@ -794,7 +794,11 @@ Hash_ass_subscript(Hash *self, PyObject *key, PyObject *value)
 
 static PyMappingMethods Hash_as_mapping = 
 {
+#if PY_VERSION_HEX < 0x02050000
+    (inquiry) Hash_length,
+#else
     (lenfunc) Hash_length,
+#endif
     (binaryfunc) Hash_subscript,
     (objobjargproc) Hash_ass_subscript
 };
