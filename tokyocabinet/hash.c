@@ -708,9 +708,10 @@ static PyObject *
 Hash_subscript(Hash *self, PyObject *key)
 {
     char *kbuf, *vbuf;
-    int ksiz;
-    int vsiz;
+    Py_ssize_t ksiz;
+    Py_ssize_t vsiz;
     PyObject *value;
+    int tcvsiz;
     
     if (!PyString_Check(key))
     {
@@ -726,8 +727,9 @@ Hash_subscript(Hash *self, PyObject *key)
     }
     
     Py_BEGIN_ALLOW_THREADS
-    vbuf = tchdbget(self->db, kbuf, (int) ksiz, &vsiz);
+    vbuf = tchdbget(self->db, kbuf, (int) ksiz, &tcvsiz);
     Py_END_ALLOW_THREADS
+    vsiz = tcvsiz;
     
     if (!vbuf)
     {
@@ -752,7 +754,7 @@ Hash_ass_subscript(Hash *self, PyObject *key, PyObject *value)
 {
     bool success;
     char *kbuf, *vbuf;
-    int ksiz, vsiz;
+    Py_ssize_t ksiz, vsiz;
     
     if (!PyString_Check(key))
     {
@@ -808,8 +810,8 @@ static int
 Hash_contains(Hash *self, PyObject *value)
 {
     char *kbuf;
-    int ksiz;
-    int vsiz;
+    Py_ssize_t ksiz;
+    Py_ssize_t vsiz;
     
     if (!PyString_Check(value))
     {

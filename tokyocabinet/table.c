@@ -68,7 +68,7 @@ pydict2tcmap(PyObject *dict)
     }
     
     PyObject *key, *value;
-    int pos = 0;
+    Py_ssize_t pos = 0;
     const char *kstr, *vstr;
     TCMAP *map;
     
@@ -824,6 +824,38 @@ Table_vsiz(Table *self, PyObject *args)
     return Py_BuildValue("i", vsiz);
 }
 
+static PyObject *
+Table_iter(Table *self)
+{
+    bool result;
+    Py_BEGIN_ALLOW_THREADS
+    result = tctdbiterinit(self->db);
+    Py_END_ALLOW_THREADS
+    if(!result){
+        return NULL;
+    }
+    Py_INCREF(self);
+    return (PyObject*)self;
+}
+
+static PyObject *
+Table_iternext(Table *self)
+{
+    const char *key;
+    PyObject *pykey;
+
+    key = tctdbiternext2(self->db);
+    if (!key) {
+        if (tctdbecode(self->db) == TCENOREC) {
+            PyErr_SetNone(PyExc_StopIteration);
+            return NULL;
+        }
+        return NULL;
+    }
+    pykey = PyString_FromString(key);
+    tcfree((void *)key);
+    return pykey;
+}
 
 static PyObject *
 Table_fwmkeys(Table *self, PyObject *args, PyObject *kwargs)
@@ -1276,7 +1308,7 @@ static PyObject *
 Table_subscript(Table *self, PyObject *key)
 {
     char *kbuf;
-    int ksiz;
+    Py_ssize_t ksiz;
     TCMAP *cols;
     PyObject *value;
     
@@ -1313,7 +1345,7 @@ Table_ass_subscript(Table *self, PyObject *key, PyObject *value)
 {
     bool success;
     char *kbuf;
-    int ksiz;
+    Py_ssize_t ksiz;
     TCMAP *cols;
     
     if (!PyString_Check(key))
@@ -1362,8 +1394,8 @@ static int
 Table_contains(Table *self, PyObject *value)
 {
     char *kbuf;
-    int ksiz;
-    int vsiz;
+    Py_ssize_t ksiz;
+    Py_ssize_t vsiz;
     
     if (!PyString_Check(value))
     {
@@ -1613,8 +1645,8 @@ static PyTypeObject TableType = {
   0,                                           /* tp_clear */
   0,                                           /* tp_richcompare */
   0,                                           /* tp_weaklistoffset */
-  0,                                           /* tp_iter */
-  0,                                           /* tp_iternext */
+  (getiterfunc)Table_iter,                     /* tp_iter */
+  (iternextfunc)Table_iternext,                /* tp_iternext */
   Table_methods,                               /* tp_methods */
   0,                                           /* tp_members */
   0,                                           /* tp_getset */

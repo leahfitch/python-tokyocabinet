@@ -1416,9 +1416,10 @@ static PyObject *
 BTree_subscript(BTree *self, PyObject *key)
 {
     char *kbuf, *vbuf;
-    int ksiz;
-    int vsiz;
+    Py_ssize_t ksiz;
+    Py_ssize_t vsiz;
     PyObject *value;
+    int tcvsiz;
     
     if (!PyString_Check(key))
     {
@@ -1434,9 +1435,10 @@ BTree_subscript(BTree *self, PyObject *key)
     }
     
     Py_BEGIN_ALLOW_THREADS
-    vbuf = tcbdbget(self->db, kbuf, (int) ksiz, &vsiz);
+    vbuf = tcbdbget(self->db, kbuf, (int) ksiz, &tcvsiz);
     Py_END_ALLOW_THREADS
-    
+    vsiz = tcvsiz;
+
     if (!vbuf)
     {
         raise_btree_error(self->db);
@@ -1460,7 +1462,7 @@ BTree_ass_subscript(BTree *self, PyObject *key, PyObject *value)
 {
     bool success;
     char *kbuf, *vbuf;
-    int ksiz, vsiz;
+    Py_ssize_t ksiz, vsiz;
     
     if (!PyString_Check(key))
     {
@@ -1516,8 +1518,8 @@ static int
 BTree_contains(BTree *self, PyObject *value)
 {
     char *kbuf;
-    int ksiz;
-    int vsiz;
+    Py_ssize_t ksiz;
+    Py_ssize_t vsiz;
     
     if (!PyString_Check(value))
     {
