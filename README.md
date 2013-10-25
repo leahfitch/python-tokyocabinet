@@ -9,15 +9,17 @@ There are actually several extensions, one for each database API. Each
 extension provides one or more classes wrapping the API's functionality as well
 as all the integer constants and an error class (e.g. `tokyocabinet.btree.error).
 
-## `tokyocabinet.btree`
+## Package Structure
+
+### `tokyocabinet.btree`
 
 Provides the BTree and BTreeCursor classes.
 
-## `tokyocabinet.hash`
+### `tokyocabinet.hash`
 
 Provides the Hash class.
 
-## `tokyocabinet.table`
+### `tokyocabinet.table`
 
 Provides the Table and TableQuery classes.
 
@@ -27,7 +29,9 @@ is a basic description of the library usage, focusing on the differences from
 the C api (the main difference being the use of classes and python's mapping
 interface).
 
-# Using BTree and Hash
+## Usage Examples
+
+### Using BTree and Hash
 
 BTree and Hash have almost identical interfaces with the exception of the
 ``BTreeCursor`` class. Here is an example of ``BTree`` use:
@@ -58,11 +62,12 @@ KeyError: 'no record found'
 >>> cur.last()
 >>> cur.next()
 KeyError: 'no record found'
+
 ```
 
 Using `tokyocabinet.hash.Hash` is essentially the same, minus the cursor bits.
 
-# Using Table and TableQuery
+### Using Table and TableQuery
 
 The table API is a bit different:
 
@@ -93,6 +98,7 @@ using an index: "strength" asc (STREQ)
 result set size: 1
 leaving the natural order
 ...
+
 ```
 
 The main thing to keep in mind is that Table, while very powerful, is a pretty
@@ -103,5 +109,24 @@ stored as records must be strings. For example:
 ...
 >>> db['foo'] = {'skidoo':23}
 TypeError: All values must be strings.
+
 ```
 
+## Installation
+
+### Mac OS X
+
+* Install Tokyo Cabinet (if you use `brew`, it is available as a _recipe_)
+* Install python-tokyocabinet
+
+```
+brew install tokyo-cabinet
+pip install python-tokyocabinet
+```
+
+## Note
+
+FAL Labs does state the Tokyo Cabinet is "surpassed" (in every aspect) by
+[Kyoto Cabinet](http://fallabs.com/kyotocabinet/). You may be using this
+because you have not moved available from Tokyo Cabinet, but it should be
+mentioned to ensure no confusion.
