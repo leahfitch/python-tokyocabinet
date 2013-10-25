@@ -13,15 +13,15 @@ as all the integer constants and an error class (e.g. `tokyocabinet.btree.error)
 
 ### `tokyocabinet.btree`
 
-Provides the BTree and BTreeCursor classes.
+Provides the `BTree` and `BTreeCursor` classes.
 
 ### `tokyocabinet.hash`
 
-Provides the Hash class.
+Provides the `Hash` class.
 
 ### `tokyocabinet.table`
 
-Provides the Table and TableQuery classes.
+Provides the `Table` and `TableQuery` classes.
 
 For the most part, it should be easy enough to refer to the [Tokyo Cabinet
 documentation](http://fallabs.com/tokyocabinet/spex-en.html) but provided below
@@ -33,7 +33,7 @@ interface).
 
 ### Using BTree and Hash
 
-BTree and Hash have almost identical interfaces with the exception of the
+`BTree` and `Hash` have almost identical interfaces with the exception of the
 ``BTreeCursor`` class. Here is an example of ``BTree`` use:
 
 ```python
@@ -69,7 +69,7 @@ Using `tokyocabinet.hash.Hash` is essentially the same, minus the cursor bits.
 
 ### Using Table and TableQuery
 
-The table API is a bit different:
+The `table` API is a bit different:
 
 ```python
 >>> from tokyocabinet import table
@@ -101,7 +101,7 @@ leaving the natural order
 
 ```
 
-The main thing to keep in mind is that Table, while very powerful, is a pretty
+The main thing to keep in mind is that `Table`, while very powerful, is a pretty
 low-level tool. It doesn't know about types so all keys and values of the dicts
 stored as records must be strings. For example:
 
@@ -126,7 +126,7 @@ pip install python-tokyocabinet
 
 ## Note
 
-FAL Labs does state the Tokyo Cabinet is "surpassed" (in every aspect) by
-[Kyoto Cabinet](http://fallabs.com/kyotocabinet/). You may be using this
-because you have not moved available from Tokyo Cabinet, but it should be
-mentioned to ensure no confusion.
+[FAL Labs](http://fallabs.com/) does state the Tokyo Cabinet is "surpassed" (in
+every aspect) by [Kyoto Cabinet](http://fallabs.com/kyotocabinet/). You may be
+using this because you have not moved available from Tokyo Cabinet, but it
+should be mentioned to ensure no confusion.
