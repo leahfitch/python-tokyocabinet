@@ -5,7 +5,7 @@ import os
 import commands
 
 if sys.version_info < (2, 3):
-    raise Error, "Python 2.3 or later is required"
+    raise Exception, "Python 2.3 or later is required"
 
 include_dirs = []
 library_dirs = ['/usr/local/lib']
@@ -30,7 +30,7 @@ if sys.platform == 'linux2':
 
 setup(
     name = "tokyocabinet",
-    version = "0.5",
+    version = "0.6",
     packages = ['tokyocabinet'],
     ext_modules = [
         Extension(
